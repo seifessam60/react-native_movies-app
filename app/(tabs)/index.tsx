@@ -13,9 +13,18 @@ import SearchBar from "@/components/SearchBar";
 import usefetch from "@/services/usefetch";
 import { fetchMovies } from "@/services/api";
 import MovieCard from "@/components/MovieCard";
+import { getTrendingMovies } from "@/services/appwrite";
+import TrendingCard from "@/components/TrendingCard";
 
 export default function Index() {
   const router = useRouter();
+
+  const {
+    data: trendingMovies,
+    loading: trendingLoading,
+    error: trendingError,
+  } = usefetch(getTrendingMovies);
+
   const {
     data: movies,
     loading: moviesLoading,
@@ -34,14 +43,14 @@ export default function Index() {
         contentContainerStyle={{ minHeight: "100%", paddingBottom: 10 }}
       >
         <Image source={icons.logo} className={"h-10 w-12 mx-auto mb-5 mt-20"} />
-        {moviesLoading ? (
+        {moviesLoading || trendingLoading ? (
           <ActivityIndicator
             size={"large"}
             color={"#0000ff"}
             className={"mt-10 self-center"}
           />
-        ) : moviesError ? (
-          <Text>Error: {moviesError.message}</Text>
+        ) : moviesError || trendingError ? (
+          <Text>Error: {moviesError?.message || trendingError?.message}</Text>
         ) : (
           <View className={"flex-1 mt-5"}>
             <SearchBar
@@ -50,6 +59,24 @@ export default function Index() {
               }}
               placeholder={"Search for a Movie"}
             />
+            {trendingMovies && (
+              <View>
+                <Text className={"mt-5 mb-3 font-bold text-white text-lg"}>
+                  Trending Movies
+                </Text>
+                <FlatList
+                  horizontal
+                  showsHorizontalScrollIndicator={false}
+                  ItemSeparatorComponent={() => <View className={"w-4"} />}
+                  data={trendingMovies}
+                  keyExtractor={(item) => item.movie_id.toString()}
+                  className={"mb-4 mt-3"}
+                  renderItem={({ item, index }) => (
+                    <TrendingCard movie={item} index={index} />
+                  )}
+                />
+              </View>
+            )}
             <>
               <Text className={"text-lg text-white font-bold mt-5 mb-3"}>
                 Latest Movies

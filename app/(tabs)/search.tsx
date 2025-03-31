@@ -1,17 +1,21 @@
-import { View, Text, Image, FlatList, ActivityIndicator } from "react-native";
 import { useEffect, useState } from "react";
+import { View, Text, Image, FlatList, ActivityIndicator } from "react-native";
+
 import { images } from "@/constants/images";
+import { icons } from "@/constants/icons";
+
 import usefetch from "@/services/usefetch";
 import { fetchMovies } from "@/services/api";
-import MovieCard from "@/components/MovieCard";
-import { icons } from "@/constants/icons";
+import { updateSearchCount } from "@/services/appwrite";
+
 import SearchBar from "@/components/SearchBar";
+import MovieCard from "@/components/MovieCard";
 
 const Search = () => {
-  const [searchQuery, setSearchQuery] = useState(" ");
+  const [searchQuery, setSearchQuery] = useState("");
 
   const {
-    data: movies,
+    data: movies = [],
     loading,
     refetch: loadMovies,
     reset,
@@ -22,7 +26,9 @@ const Search = () => {
     const timeoutId = setTimeout(async () => {
       if (searchQuery.trim()) {
         await loadMovies();
-
+        if (movies?.length && movies[0]) {
+          await updateSearchCount(searchQuery, movies[0]);
+        }
         // Call updateSearchCount only if there are results
       } else {
         reset();
@@ -31,6 +37,7 @@ const Search = () => {
 
     return () => clearTimeout(timeoutId);
   }, [searchQuery]);
+
   return (
     <View className={"flex-1 bg-primary"}>
       <Image
@@ -38,6 +45,7 @@ const Search = () => {
         className={"w-full flex-1 absolute z-0"}
         resizeMode={"cover"}
       />
+
       <FlatList
         className={"px-5"}
         data={movies}

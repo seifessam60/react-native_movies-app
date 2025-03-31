@@ -11,7 +11,7 @@ import { images } from "@/constants/images";
 import { icons } from "@/constants/icons";
 import SearchBar from "@/components/SearchBar";
 import usefetch from "@/services/usefetch";
-import { fetchMovies } from "@/services/api";
+import { fetchMovies, fetchPopularMovies } from "@/services/api";
 import MovieCard from "@/components/MovieCard";
 import { getTrendingMovies } from "@/services/appwrite";
 import TrendingCard from "@/components/TrendingCard";
@@ -23,8 +23,7 @@ export default function Index() {
     data: trendingMovies,
     loading: trendingLoading,
     error: trendingError,
-  } = usefetch(getTrendingMovies);
-
+  } = usefetch(fetchPopularMovies);
   const {
     data: movies,
     loading: moviesLoading,
@@ -69,7 +68,7 @@ export default function Index() {
                   showsHorizontalScrollIndicator={false}
                   ItemSeparatorComponent={() => <View className={"w-4"} />}
                   data={trendingMovies}
-                  keyExtractor={(item) => item.movie_id.toString()}
+                  keyExtractor={(item) => item.id}
                   className={"mb-4 mt-3"}
                   renderItem={({ item, index }) => (
                     <TrendingCard movie={item} index={index} />

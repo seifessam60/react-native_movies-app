@@ -5,14 +5,14 @@ import MaskedView from "@react-native-masked-view/masked-view";
 import { images } from "@/constants/images";
 
 const TrendingCard = ({
-  movie: { poster_url, title, movie_id },
+  movie: { poster_path, title, movie_id },
   index,
 }: TrendingCardProps) => {
   return (
     <Link href={`/movies/${movie_id}`} asChild>
       <TouchableOpacity className={"w-32 relative pl-5"}>
         <Image
-          source={{ uri: poster_url }}
+          source={{ uri: "https://image.tmdb.org/t/p/w500" + poster_path }}
           className={"w-32 h-48 rounded-lg"}
           resizeMode={"cover"}
         />

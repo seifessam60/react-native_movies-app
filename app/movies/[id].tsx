@@ -68,12 +68,13 @@ const MovieDetails = () => {
           />
           <View className={"flex flex-row justify-between w-1/2"}>
             <MovieInfo
-              label={"Budget"}
-              value={`$${movie?.budget ?? 0 / 1000000} million`}
+              label="Budget"
+              value={`$${((movie?.budget ?? 0) / 1_000_000).toLocaleString()} million`}
             />
+
             <MovieInfo
-              label={"Revenue"}
-              value={`$${movie?.revenue ?? 0 / 1000000} million`}
+              label="Revenue"
+              value={`$${((movie?.revenue ?? 0) / 1_000_000).toLocaleString()} million`}
             />
           </View>
           <MovieInfo
